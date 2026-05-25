@@ -95,6 +95,7 @@ class BalloonComponent extends CircleComponent with TapCallbacks {
           paint: Paint()..color = color,
         );
 
+  @override
   final double radius;
   final Color color;
   final double speed;

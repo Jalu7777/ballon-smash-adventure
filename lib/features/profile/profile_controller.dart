@@ -1,7 +1,7 @@
-import 'dart:io';
+import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../core/cache/local_cache.dart';
 import 'player_profile.dart';
@@ -16,17 +16,25 @@ class ProfileController extends GetxController {
 
   final ProfileRepository _repository;
   final LocalCache _cache;
-  final ImagePicker _imagePicker = ImagePicker();
 
   final profile = Rxn<PlayerProfile>();
   final isLoading = false.obs;
-  final isUploadingImage = false.obs;
+  StreamSubscription<User?>? _authSubscription;
 
   @override
   void onInit() {
     super.onInit();
     profile.value = _cache.readProfile();
-    refreshProfile();
+    _authSubscription = FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (user == null) {
+        profile.value = null;
+        return;
+      }
+
+      final cached = _cache.readProfile();
+      profile.value = cached?.uid == user.uid ? cached : null;
+      refreshProfile();
+    });
   }
 
   Future<void> refreshProfile() async {
@@ -62,44 +70,9 @@ class ProfileController extends GetxController {
     }
   }
 
-  Future<void> updateDisplayName(String displayName) async {
-    final current = profile.value;
-    if (current == null || displayName.trim().isEmpty) {
-      return;
-    }
-    final updated = current.copyWith(
-      displayName: displayName.trim(),
-      updatedAt: DateTime.now(),
-    );
-    profile.value = updated;
-    await _cache.writeProfile(updated);
-    await _repository.saveProfile(updated);
-  }
-
-  Future<void> pickAndUploadProfileImage() async {
-    final current = profile.value;
-    if (current == null) {
-      return;
-    }
-    final image = await _imagePicker.pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 1024,
-      imageQuality: 85,
-    );
-    if (image == null) {
-      return;
-    }
-    isUploadingImage.value = true;
-    try {
-      final url = await _repository.uploadProfileImage(File(image.path), current.uid);
-      if (url != null) {
-        final updated = current.copyWith(photoUrl: url, updatedAt: DateTime.now());
-        profile.value = updated;
-        await _cache.writeProfile(updated);
-        await _repository.saveProfile(updated);
-      }
-    } finally {
-      isUploadingImage.value = false;
-    }
+  @override
+  void onClose() {
+    _authSubscription?.cancel();
+    super.onClose();
   }
 }

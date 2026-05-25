@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../core/firebase/firebase_guard.dart';
 import 'player_profile.dart';
@@ -78,12 +75,4 @@ class ProfileRepository {
     });
   }
 
-  Future<String?> uploadProfileImage(File file, String uid) async {
-    if (!isFirebaseReady) {
-      return null;
-    }
-    final ref = FirebaseStorage.instance.ref('profile_images/$uid.jpg');
-    await ref.putFile(file, SettableMetadata(contentType: 'image/jpeg'));
-    return ref.getDownloadURL();
-  }
 }

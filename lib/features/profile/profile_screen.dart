@@ -18,52 +18,26 @@ class ProfileScreen extends GetView<ProfileController> {
         if (profile == null) {
           return const Center(child: Text('Profile unavailable'));
         }
-        final nameController = TextEditingController(text: profile.displayName);
         return ListView(
           padding: const EdgeInsets.all(16),
           children: [
             Center(
-              child: Stack(
-                alignment: Alignment.bottomRight,
-                children: [
-                  CircleAvatar(
-                    radius: 54,
-                    backgroundImage:
-                        profile.photoUrl == null ? null : NetworkImage(profile.photoUrl!),
-                    child: profile.photoUrl == null
-                        ? const Icon(Icons.person, size: 46)
-                        : null,
-                  ),
-                  IconButton.filled(
-                    tooltip: 'Upload image',
-                    onPressed: controller.isUploadingImage.value
-                        ? null
-                        : controller.pickAndUploadProfileImage,
-                    icon: controller.isUploadingImage.value
-                        ? const SizedBox.square(
-                            dimension: 18,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Icon(Icons.camera_alt),
-                  ),
-                ],
+              child: CircleAvatar(
+                radius: 54,
+                backgroundImage:
+                    profile.photoUrl == null ? null : NetworkImage(profile.photoUrl!),
+                child: profile.photoUrl == null
+                    ? const Icon(Icons.person, size: 46)
+                    : null,
               ),
             ),
-            const SizedBox(height: 24),
-            TextField(
-              controller: nameController,
-              textInputAction: TextInputAction.done,
-              decoration: const InputDecoration(
-                labelText: 'Display name',
-                border: OutlineInputBorder(),
+            const SizedBox(height: 16),
+            Center(
+              child: Text(
+                profile.displayName,
+                style: Theme.of(context).textTheme.headlineSmall,
+                textAlign: TextAlign.center,
               ),
-              onSubmitted: controller.updateDisplayName,
-            ),
-            const SizedBox(height: 12),
-            FilledButton.icon(
-              onPressed: () => controller.updateDisplayName(nameController.text),
-              icon: const Icon(Icons.save),
-              label: const Text('Save profile'),
             ),
             const SizedBox(height: 24),
             ListTile(

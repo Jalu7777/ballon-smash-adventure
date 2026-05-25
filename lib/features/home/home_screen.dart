@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -100,8 +102,10 @@ class _DashboardTab extends StatelessWidget {
               }),
               const SizedBox(height: 16),
               FilledButton.icon(
-                onPressed: () => Get.to<void>(() => const GameScreen()),
-                icon: const Icon(Icons.play_arrow),
+                onPressed: () { 
+                  log("hello =>");
+                  Get.to<void>(() => const GameScreen());},
+                icon: const Icon(Icons.import_contacts_rounded),
                 label: const Text('Play 45-second round'),
               ),
               const SizedBox(height: 16),

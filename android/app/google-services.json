@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "144298619830",
+    "project_id": "ballon-smash-adventure",
+    "storage_bucket": "ballon-smash-adventure.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:144298619830:android:448747ce0564ca46b68717",
+        "android_client_info": {
+          "package_name": "com.example.ballon_smash_adventure"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "144298619830-5mrnhodvmi5j5g87p7a37b2psjg3ds5p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ballon_smash_adventure",
+            "certificate_hash": "09d8f0c9b57a375f384ed1527f0daa1736fa4a36"
+          }
+        },
+        {
+          "client_id": "144298619830-kujkq8kbh84gmff7a5q1bl2p7uqgu6cf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiLEkPY5Q3ujXHtCpWEp3EycH56lYDeQ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "144298619830-kujkq8kbh84gmff7a5q1bl2p7uqgu6cf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

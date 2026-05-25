@@ -15,6 +15,32 @@ class LeaderboardScreen extends GetView<LeaderboardController> {
         if (controller.isLoading.value && entries.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }
+        final error = controller.errorMessage.value;
+        if (error != null && entries.isEmpty) {
+          return RefreshIndicator(
+            onRefresh: controller.refreshLeaderboard,
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(24),
+              children: [
+                const SizedBox(height: 140),
+                Icon(
+                  Icons.lock_outline,
+                  size: 54,
+                  color: Theme.of(context).colorScheme.error,
+                ),
+                const SizedBox(height: 12),
+                Center(
+                  child: Text(
+                    error,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
         if (entries.isEmpty) {
           return RefreshIndicator(
             onRefresh: controller.refreshLeaderboard,
@@ -34,7 +60,7 @@ class LeaderboardScreen extends GetView<LeaderboardController> {
           child: ListView.separated(
             padding: const EdgeInsets.all(16),
             itemCount: entries.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 8),
+            separatorBuilder: (_, _) => const SizedBox(height: 8),
             itemBuilder: (context, index) {
               final entry = entries[index];
               return ListTile(

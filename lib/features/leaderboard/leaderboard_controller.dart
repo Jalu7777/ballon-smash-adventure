@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
 import '../../core/cache/local_cache.dart';
@@ -16,6 +17,7 @@ class LeaderboardController extends GetxController {
 
   final entries = <LeaderboardEntry>[].obs;
   final isLoading = false.obs;
+  final errorMessage = RxnString();
 
   @override
   void onInit() {
@@ -26,12 +28,19 @@ class LeaderboardController extends GetxController {
 
   Future<void> refreshLeaderboard() async {
     isLoading.value = true;
+    errorMessage.value = null;
     try {
       final remote = await _repository.fetchTopPlayers();
       if (remote.isNotEmpty) {
         entries.assignAll(remote);
         await _cache.writeLeaderboard(remote);
       }
+    } on FirebaseException catch (error) {
+      errorMessage.value = error.code == 'permission-denied'
+          ? 'Leaderboard access is blocked by Firestore rules.'
+          : error.message ?? 'Unable to load leaderboard.';
+    } catch (_) {
+      errorMessage.value = 'Unable to load leaderboard.';
     } finally {
       isLoading.value = false;
     }
